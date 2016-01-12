@@ -1,0 +1,11 @@
+baseurl = "https://www.firefart.at"
+languageCode = "en-us"
+title = "FireFart"
+theme = "purehugo"
+copyright = "Copyright by Christian Mehlmauer"
+
+[params]
+  twitterName = "_FireFart_"
+  githubName = "FireFart"
+  description = "that austrian security guy"
+  author = "Christian Mehlmauer"
