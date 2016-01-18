@@ -1,4 +1,4 @@
-baseurl = "https://www.firefart.at"
+baseurl = "https://firefart.at"
 languageCode = "en-us"
 title = "FireFart"
 theme = "purehugo"

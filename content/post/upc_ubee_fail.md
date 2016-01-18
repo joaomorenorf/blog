@@ -6,7 +6,7 @@ metakeys = ["Ubee EVW3226", "UPC", "root shell", "hacking"]
 
 +++
 
-Inspired by [Blasty](https://twitter.com/bl4sty) and his [UPC Wifi key generator](https://haxx.in/upc-wifi/) I decided to take a look at my UPC router too. It's a **Ubee EVW3226** with a custom firmware by UPC providing a modified web interface and a lot of other stuff.
+Inspired by [Blasty](https://twitter.com/bl4sty) and his [UPC Wifi key generator](https://haxx.in/upc-wifi/) I decided to take a look at my UPC router too. It's a **Ubee EVW3226** with a custom firmware built by UPC providing a modified web interface and a lot of other stuff.
 
 <!--more-->
 
