@@ -12,7 +12,11 @@ Inspired by [Blasty](https://twitter.com/bl4sty) and his [UPC Wifi key generator
 
 First I tried to identify some debug pins on the board and found multiple possible UART connectors. I connected my [Buspirate](https://www.sparkfun.com/products/9544) to the first UART and got a login shell protected by a password. I tried some default passwords but was not able to get in so I needed to find another way. According to [another blog post](https://www.freeture.ch/?p=766) I found there is also a second UART connector with no password but this one was not working on my device.
 
+[![UART](/img/ubee/uart_thumb.png)](/img/ubee/uart.png)
+
 So I took a deeper look at the chips on the board and identified two flash chips: *Spansion FL128PIF*. By looking at the [datasheet](http://www.spansion.com/Support/Datasheets/S25FL128P_00.pdf) I discovered there are some SPI pins on the chip to dump it's content (or write to it). So I attached a SOIC test clip on top of the flash chip and connected my [GoodFET](http://goodfet.sourceforge.net/) to it. Using the test clip is a good alternative because there is no need to desolder any chips. I was able to dump the whole 16MB memory of each chip using this method with `spiflash dump`. The address ranges to dump can be taken from the datasheet too.
+
+[![DUMP](/img/ubee/testpin_thumb.png)](/img/ubee/testpin.png)
 
 The next thing to do was to extract the content of the dumped images. By using the latest development version of [binwalk](https://github.com/devttys0/binwalk) I was able to extract the file system contents of both chips. This dump only contains the firmware with no dynamic content from UPC so far so the running config is still missing.
 
