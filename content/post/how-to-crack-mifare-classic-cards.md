@@ -38,7 +38,7 @@ More about Mifare in general can be found on [Wikipedia](http://en.wikipedia.org
 
 [http://www.fuzzysecurity.com/tutorials/rfid/2.html](http://www.fuzzysecurity.com/tutorials/rfid/2.html)
 
-[http://www.nxp.com/documents/data_sheet/MF1S503x.pdf (Section 8.6)](http://www.nxp.com/documents/data_sheet/MF1S503x.pdf)
+[http://cache.nxp.com/documents/data_sheet/MF1S50YYX_V1.pdf (Section 8.6)](http://cache.nxp.com/documents/data_sheet/MF1S50YYX_V1.pdf)
 
 Now I will demonstrate how to get all access keys for all sectors, locate the credits and modify them.
 
