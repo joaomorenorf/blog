@@ -157,7 +157,7 @@ We are presented a login page for Secure Bank.
 
 I first tried to log in with various default passwort combinations but none of them worked.
 
-After putting a single ' in the username field, the application responds with an PHP error message:
+After putting a single `'` in the username field, the application responds with an PHP error message:
 ```
 Warning: mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, boolean given in /var/www/html/unisxcudkqjydw/vulnbank/client/config.php on line 102
 ```
@@ -294,7 +294,7 @@ function check_login($username,$password){
 }
 ```
 
-Before executing the query the "OR", "UNION" and "AND" keywords are removed and also the ' is stripped from the password parameter.
+Before executing the query the `OR`, `UNION` and `AND` keywords are removed and also the `'` is stripped from the password parameter.
 
 Now let's search for a privilege escalation on the server to get ourselves root. By looking at `/etc/passwd` we can see there is a user with a login shell called `taviso`.
 
@@ -377,7 +377,7 @@ select * from klienti;
 ```
 
 Searching the system for world writeable files gave me a little **WTF** moment:
-**/etc/passwd was writeable by every user**
+**/etc/passwd is writeable by every user**
 
 ```
 $ find / -type f -perm -o+w -exec ls -l {} \; 2>/dev/null | grep -v /proc/ | grep -v /sys/
@@ -391,7 +391,7 @@ root@kali:~# python -c 'import crypt; print crypt.crypt("supersecretpassword", "
 $6$saltsalt$t084OTPu49EJVUgFTLQxZ4yArFIeFzEnpGtrpyifSoSmJuIk0rQ9YmVXUyd2.Is1eMV/S0loZUxni1ijH5Qem.
 ```
 
-I then replaced the x of the user root and taviso in the passwd file with the new password hash and uploaded it again, overwriting the original `/etc/passwd`.
+I then replaced the second field of the user root and taviso in the passwd file with the new password hash and uploaded it again, overwriting the original `/etc/passwd`.
 
 Trying to SSH in with root and the new password failed - likely because root SSH login is disabled.
 But trying to SSH in with the user taviso works and we now have a working session!
