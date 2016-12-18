@@ -24,8 +24,12 @@
                         </p>
                     </header>
 
+                    <div id="toc" class="well col-md-4 col-sm-6">
+                      {{ .TableOfContents }}
+                    </div>
+
                     <div class="post-description">
-                        {{ .Content }}
+                      {{ .Content }}
                     </div>
                 </section>
             </div>
