@@ -508,7 +508,7 @@ Now we are able to add our private key file to `/home/robert/.ssh/authorized_key
 
 Now we can also get the `tenbytes` binary and look at it to confirm our script
 
-[![binaryninja](/img/vulnhub_dc416_basement/binaryninja.png)](/img/vulnhub_hackday_albania/startpage.png)
+![binaryninja](/img/vulnhub_dc416_basement/binaryninja.png)
 
 The last flag missing is the one from the `marla.xip` file which I might add later to this post once I figure it out.
 
