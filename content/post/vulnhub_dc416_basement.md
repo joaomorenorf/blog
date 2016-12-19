@@ -419,8 +419,7 @@ while offset <= 255:
         payload = payload.ljust(10, "\x90")
 
         if len(payload) > 10:
-            print(offset)
-            log.error("Payload too long! ({} bytes)".format(len(payload)))
+            log.error("Payload too long! ({} bytes). Offset {}".format(len(payload), offset))
 
         log.info("Payload: {}".format(encode_payload(payload)))
 
