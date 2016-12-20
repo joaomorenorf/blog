@@ -359,7 +359,6 @@ Once the correct offset is found, `/bin/sh` is executed and we have a shell as `
 #!/usr/bin/env python2
 
 from pwn import *
-import math
 
 context(bits=64,
         os='linux',
@@ -377,7 +376,6 @@ def calculate_iterations(number):
         iterations += 1
         number /= 2
     return iterations
-
 
 local = False
 #  local = True
