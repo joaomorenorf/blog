@@ -4,6 +4,7 @@ title = "FireFart"
 theme = "purehugo"
 copyright = "Copyright by Christian Mehlmauer"
 ignoreFiles = [ "^\\.DS_Store$" ]
+disableHugoGeneratorInject = true
 
 [params]
   twitterName = "_FireFart_"

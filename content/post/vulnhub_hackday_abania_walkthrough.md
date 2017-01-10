@@ -3,6 +3,7 @@ Description = "Vulnhub - HackDay: Albania Walkthrough"
 title = "Vulnhub - HackDay: Albania Walkthrough"
 date = "2016-11-24T18:45:00+01:00"
 metakeys = ["vulnhub", "walkthrough", "hackday albania"]
+image = "/img/misc/vulnhub.png"
 
 +++
 

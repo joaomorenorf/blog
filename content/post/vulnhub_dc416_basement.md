@@ -3,6 +3,7 @@ Description = "Vulnhub - DC416: Basement Walkthrough"
 title = "Vulnhub - DC416: Basement Walkthrough"
 date = "2016-12-18T01:00:00+01:00"
 metakeys = ["vulnhub", "walkthrough", "DC416", "basement"]
+image = "/img/misc/vulnhub.png"
 
 +++
 
