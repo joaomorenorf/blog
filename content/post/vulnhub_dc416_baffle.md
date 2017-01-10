@@ -8,6 +8,8 @@ metakeys = ["vulnhub", "walkthrough", "DC416", "baffle"]
 
 After I finished [DC416 - Basement](/post/vulnhub_dc416_basement/) I wanted to give the next VM a try: [DC416 - baffle](https://www.vulnhub.com/entry/dc416-2016,168/) by [@superkojiman](https://twitter.com/superkojiman).
 
+<!--more-->
+
 # Information Gathering
 
 As always I started with a `netdiscover` to get the machines IP-Address and viewed the instructions on Port 80 in a browser.
