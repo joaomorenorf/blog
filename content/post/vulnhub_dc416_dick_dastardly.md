@@ -10,6 +10,12 @@ New evening, new VM: [DC416 Dick Dastardly](https://www.vulnhub.com/entry/dc416-
 
 <!--more-->
 
+Here are my other writeups for the DC416 challenges:
+
+* [DC416 Basement](/post/vulnhub_dc416_basement/)
+* [DC416 Baffle](/post/vulnhub_dc416_baffle/)
+* [DC416 Fortress](/post/vulnhub_dc416_fortress/)
+
 # information gathering
 As every DC416 VM there is an information page hosted on port 80 with informations about it:
 ```

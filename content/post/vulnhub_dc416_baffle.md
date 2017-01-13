@@ -10,6 +10,12 @@ After I finished [DC416 - Basement](/post/vulnhub_dc416_basement/) I wanted to g
 
 <!--more-->
 
+Here are my other writeups for the DC416 challenges:
+
+* [DC416 Basement](/post/vulnhub_dc416_basement/)
+* [DC416 Dick Dastardly](/post/vulnhub_dc416_dick_dastardly/)
+* [DC416 Fortress](/post/vulnhub_dc416_fortress/)
+
 # Information Gathering
 
 As always I started with a `netdiscover` to get the machines IP-Address and viewed the instructions on Port 80 in a browser.

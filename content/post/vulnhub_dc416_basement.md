@@ -10,6 +10,12 @@ Basement is the first of 4 VMs from the DC416 CTF by [@barrebas](https://twitter
 
 <!--more-->
 
+Here are my other writeups for the DC416 challenges:
+
+* [DC416 Baffle](/post/vulnhub_dc416_baffle/)
+* [DC416 Dick Dastardly](/post/vulnhub_dc416_dick_dastardly/)
+* [DC416 Fortress](/post/vulnhub_dc416_fortress/)
+
 # information gathering
 
 Before you start with a portscan you need to wait a few minutes because there are several binaries executed by cronjobs. I noticed this during exploiting the machine so be sure to start nmapping after the machine runs a few minutes.
