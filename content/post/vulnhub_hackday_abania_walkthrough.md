@@ -1,8 +1,8 @@
 +++
-Description = "Vulnhub - HackDay: Albania Walkthrough"
-title = "Vulnhub - HackDay: Albania Walkthrough"
+Description = "Vulnhub - HackDay: Albania Writeup"
+title = "Vulnhub - HackDay: Albania Writeup"
 date = "2016-11-24T18:45:00+01:00"
-metakeys = ["vulnhub", "walkthrough", "hackday albania"]
+metakeys = ["vulnhub", "walkthrough", "writeup", "hackday albania"]
 image = "/img/misc/vulnhub.png"
 
 +++

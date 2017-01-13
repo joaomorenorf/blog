@@ -1,8 +1,8 @@
 +++
-Description = "Vulnhub - DC416: Dick Dastardly Walkthrough"
-title = "Vulnhub - DC416: Dick Dastardly Walkthrough"
+Description = "Vulnhub - DC416: Dick Dastardly Writeup"
+title = "Vulnhub - DC416: Dick Dastardly Writeup"
 date = "2017-01-10T23:00:00+01:00"
-metakeys = ["vulnhub", "walkthrough", "DC416", "dickdastardly", "dick dastardly"]
+metakeys = ["vulnhub", "walkthrough", "writeup", "DC416", "dickdastardly", "dick dastardly"]
 image = "/img/misc/vulnhub.png"
 
 +++
