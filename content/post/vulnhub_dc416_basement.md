@@ -105,7 +105,7 @@ meterpreter > cat flag.txt
 flag{j4cks_t0t4L_l4cK_0f_$uRpr1sE}
 ```
 
-# marla
+# marla #1
 
 By looking at `/etc/passwd` we can see there are 4 seperate users on the system so probably each user holds one flag.
 ```
@@ -115,7 +115,217 @@ tyler:x:1002:1002:tyler,,,:/home/tyler:/bin/tyler
 robert:x:1003:1003:robert,,,:/home/robert:/bin/bash
 ```
 
-In the folder `/home/jack/.secret/` there is a file called `marla.xip` which i wasn't yet able to decode. So this probably holds the last flag.
+In the folder `/home/jack/.secret/` there is a file called `marla.xip`. A file command on the file reveals only `data` so we have to dig deeper.
+```
+root@kali:~# file marla.xip
+marla.xip: data
+```
+
+barrebas got me the hint that this `xip` extension is a mix of two filetypes. So the file is probably a XOR encrypted ZIP archive. To quickly test XOR keys I used [xortool](https://github.com/hellman/xortool.git).
+
+```
+root@kali:~/xortool# xortool -b /root/marla.xip
+The most probable key lengths:
+   3:   14.6%
+   6:   19.6%
+   9:   11.0%
+  12:   13.8%
+  15:   7.4%
+  18:   10.1%
+  21:   5.6%
+  24:   7.1%
+  27:   5.1%
+  30:   5.6%
+Key-length can be 3*n
+256 possible key(s) of length 6:
+M4YH3M
+L5XI2L
+O6[J1O
+N7ZK0N
+I0]L7I
+...
+Found 0 plaintexts with 95.0%+ printable characters
+See files filename-key.csv, filename-char_used-perc_printable.csv
+```
+
+Now let's look at the directory with the decoded files and see if we can spot something of interest:
+```
+root@kali:~/xortool/xortool_out# file * | grep -v "     data"
+000.out:                               Zip archive data
+197.out:                               PGP\011Secret Key -
+199.out:                               PGP\011Secret Sub-key -
+220.out:                               DOS executable (COM, 0x8C-variant)
+232.out:                               COM executable for DOS
+252.out:                               AIX core file fulldump
+filename-char_used-perc_printable.csv: ASCII text
+filename-key.csv:                      ASCII text
+```
+
+So we have found a ZIP archive. By looking at the generated csv we can see the XOR key beeing used was `M4YH3M`.
+
+Next step is to examine the contents of the zip file.
+```
+root@kali:~# mv 000.out /root/marla.zip
+root@kali:~# unzip -l marla.zip
+Archive:  marla.zip
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+     1766  2016-11-22 04:41   marla
+      396  2016-11-22 04:49   marla.pub
+---------                     -------
+     2162                     2 files
+```
+Unfortunately the zip file is encrypted with a password so let's try to crack it.
+
+JohnTheRipper contains a handy little script called `zip2john` to extract the password hash for cracking. I then removed all except the hash from the file and ran hashcat against it.
+```
+[firefart@linux hashcat]$ /home/firefart/hacking/JohnTheRipper/run/zip2john /home/firefart/marla.zip
+marla.zip:$zip2$*0*1*0*05ed2b46cc5c8fdd*4dfb*14c*3c099c875a5b4e660f310f657f34d7023b638556bc90a38168d5d752454a8954ebe2a08e064153f36afa0eb398f11139fae94e5cb7678dbda653de495847cd9e2c8c03573f6260f349a6e553b3a21647bcb351ae01ef15538cd613b97a144ad97d2f0db50bd29e093ea7772db8e465c5e6019f4427eab1f059241f86091148e8e292171a7cebb85fa07826f8b2061414931b217e63aa187ee508bad16cb1c57993bd703096b77e4e376edd9842e4363e58512b26422cbf1961a4ad741d4ab9d292a447cd6eaccd23e040702edb8be854798a35a63491b07b4c3b820e6c2a394e42a17180720cd9287f953f3482382068df0a98755ee27ba9ee0667b5b813cc3c9105a92d9f76566e9674d0c8ccc4050abeda5089d854546a5a39da8d93da503179dc6e0d847d29ede19654471d5a875e65a81e700810b4b7f1657bf8d78869e8078681dabfc35d0e0bc15fee*321fdfa476052bcf20c6*$/zip2$:::::marla.zip
+
+[firefart@linux hashcat]$ cat /home/firefart/marla.zip.hash
+$zip2$*0*1*0*05ed2b46cc5c8fdd*4dfb*14c*3c099c875a5b4e660f310f657f34d7023b638556bc90a38168d5d752454a8954ebe2a08e064153f36afa0eb398f11139fae94e5cb7678dbda653de495847cd9e2c8c03573f6260f349a6e553b3a21647bcb351ae01ef15538cd613b97a144ad97d2f0db50bd29e093ea7772db8e465c5e6019f4427eab1f059241f86091148e8e292171a7cebb85fa07826f8b2061414931b217e63aa187ee508bad16cb1c57993bd703096b77e4e376edd9842e4363e58512b26422cbf1961a4ad741d4ab9d292a447cd6eaccd23e040702edb8be854798a35a63491b07b4c3b820e6c2a394e42a17180720cd9287f953f3482382068df0a98755ee27ba9ee0667b5b813cc3c9105a92d9f76566e9674d0c8ccc4050abeda5089d854546a5a39da8d93da503179dc6e0d847d29ede19654471d5a875e65a81e700810b4b7f1657bf8d78869e8078681dabfc35d0e0bc15fee*321fdfa476052bcf20c6*$/zip2$
+
+[firefart@linux hashcat]$ ./hashcat -a 3 -m 13600 /home/firefart/marla.zip.hash
+
+$zip2$*0*1*0*05ed2b46cc5c8fdd*4dfb*14*3c099c875a5b4e660f310f657f34d7023b638556bc90a38168d5d752454a8954ebe2a08e064153f36afa0eb398f11139fae94e5cb7678dbda653de495847cd9e2c8c03573f6260f349a6e553b3a21647bcb351ae01ef15538cd613b97a144ad97d2f0db50bd29e093ea7772db8e465c5e6019f4427eab1f059241f86091148e8e292171a7cebb85fa07826f8b2061414931b217e63aa187ee508bad16cb1c57993bd703096b77e4e376edd9842e4363e58512b26422cbf1961a4ad741d4ab9d292a447cd6eaccd23e040702edb8be854798a35a63491b07b4c3b820e6c2a394e42a17180720cd9287f953f3482382068df0a98755ee27ba9ee0667b5b813cc3c9105a92d9f76566e9674d0c8ccc4050abeda5089d854546a5a39da8d93da503179dc6e0d847d29ede19654471d5a875e65a81e700810b4b7f1657bf8d78869e8078681dabfc35d0e0bc15fee*321fdfa476052bcf20c6*$/zip2$:m4rl4
+
+Session..........: hashcat
+Status...........: Cracked
+Hash.Type........: WinZip
+Hash.Target......: $zip2$*0*1*0*05ed2b46cc5c8fdd*4dfb*14*3c099c875a5b4e660f310f657f34d7023b638556bc90a38168d5d752454a8954ebe2a08e064153f36afa0eb398f11139fae94e5cb7678dbda653de495847cd9e2c8c03573f6260f349a6e553b3a21647bcb351ae01ef15538cd613b97a144ad97d2f0db50bd29e093ea7772db8e465c5e6019f4427eab1f059241f86091148e8e292171a7cebb85fa07826f8b2061414931b217e63aa187ee508bad16cb1c57993bd703096b77e4e376edd9842e4363e58512b26422cbf1961a4ad741d4ab9d292a447cd6eaccd23e040702edb8be854798a35a63491b07b4c3b820e6c2a394e42a17180720cd9287f953f3482382068df0a98755ee27ba9ee0667b5b813cc3c9105a92d9f76566e9674d0c8ccc4050abeda5089d854546a5a39da8d93da503179dc6e0d847d29ede19654471d5a875e65a81e700810b4b7f1657bf8d78869e8078681dabfc35d0e0bc15fee*321fdfa476052bcf20c6*$/zip2$
+Time.Started.....: Thu Jan 19 16:33:24 2017 (57 secs)
+Time.Estimated...: Thu Jan 19 16:34:21 2017 (0 secs)
+Input.Mask.......: ?1?2?2?2?2 [5]
+Input.Charset....: -1 ?l?d?u, -2 ?l?d, -3 ?l?d*!$@_, -4 Undefined
+Input.Queue......: 5/15 (33.33%)
+Speed.Dev.#1.....:  1262.8 kH/s (11.10ms)
+Recovered........: 1/1 (100.00%) Digests, 1/1 (100.00%) Salts
+Progress.........: 71884800/104136192 (69.03%)
+Rejected.........: 0/71884800 (0.00%)
+Restore.Point....: 1152000/1679616 (68.59%)
+Candidates.#1....: ma7f7 -> mq7g5
+HWMon.Dev.#1.....: Temp: 73c Fan: 56% Util: 95% Core:1911Mhz Mem:3802Mhz Lanes:16
+
+Started: Thu Jan 19 16:33:16 2017
+Stopped: Thu Jan 19 16:34:21 2017
+```
+
+Awesome so the password is `m4rl4`.
+
+We are now able to extract the zip file with `p7zip`.
+```
+root@kali:~# p7zip -d marla.7z
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=en_US.UTF-8,Utf16=on,HugeFiles=on,64 bits,1 CPU Intel(R) Core(TM) i7-3520M CPU @ 2.90GHz (306A9),ASM,AES-NI)
+
+Scanning the drive for archives:
+1 file, 1974 bytes (2 KiB)
+
+Extracting archive: marla.7z
+WARNING:
+marla.7z
+Can not open the file as [7z] archive
+The file is open as [zip] archive
+
+--
+Path = marla.7z
+Open WARNING: Can not open the file as [7z] archive
+Type = zip
+Physical Size = 1974
+
+
+Enter password (will not be echoed):
+Everything is Ok
+
+Archives with Warnings: 1
+Files: 2
+Size:       2162
+Compressed: 1974
+```
+
+So let's have a look at the extracted files:
+```
+
+root@kali:~# cat marla.pub
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCuh1NziT0vauHjqRvPIDQnFKYYtaYP1h56DXesZ6ZlSezFZVtJ1oQvLh3WJGgH7Bojzwxo4k5xwvw/0fyvCD68GGA99j8wfcYvFQ60BGMUYHfEduQPs0sAmL9tftIUY1vLf6htgCfz8oJ6Pi9YxLkgrS0+udGGxU0rXkU6hfaT710VH2DpvxymXbrKHHnd2wYmf/VVg54ugRyKWjKSBR+IkXTJr0FSMmsb7s1O84r1XTjJUJc6AZkiN1NLMxDQ1xnb/ToCnSpPIDm83fPDLDYhnlNZ2YoVqq9TTYVF9lxBaYLEjhVI+HKFF2geWjnMR5IHU/YwKWodcqh2GYY/LGNV marla@basement
+
+
+root@kali:~# cat marla
+-----BEGIN RSA PRIVATE KEY-----
+Proc-Type: 4,ENCRYPTED
+DEK-Info: AES-128-CBC,4A3641AA61921099DAB3E32222AE8221
+
+k8zDFT8UXhpb7Dn+KzYv6mYuAI0vF25s/zFpuvtm31FtTwOAzqz+ukei2DR+r4Zb
+QKGV5EPf0ymcx6Nh4X700eRa555hFDrWMRwLAy7bTkYK5MbLY3On7BqBnmpbs/bd
+Pd/VpmvMtUnl8YcMF756NLt0sgqwWbf8DGFUcJZTGEsZhwTL86cCYyFbbdOHijzY
+Wi+OjgVBxw62VrdEn8HHA0Hks72LRGAsXLJ4ReT6nm/6H88idKHtnc1CXGzUtEwR
+E7/Bzzqn/P1rTrnPp/adV4oAC+Q86Sdy5RHuH35KC6c6WgpFRprqeWeLdf6aBBF0
+yadmGUu4PrWP7iYd7Bc4k2Czlr0pk1x0GjqedjFYmPWypllfZvMriQa6QhYkKlGl
+ecEm8Usrok54u8jX1VZtdRu1+6gNPZcw8FOK1GTks2L9ywvWoSNOGr5LFBDBYufq
+SNNUQq0cEyAl3KaPT5vPyEcrqAa7NKmIl5uImECPG93iIsfOt3P4ujVwWuT3p100
+KHnHEybuZXTBRUPmHoE+wXvFyLAWzHG8d6cy18FzGEyogUbs+d5GmdFjsyaaLeES
+8AtkGrWrUAgo/NDpbVdHoLmwjzvxlDkk+Uk3/KN5qjFKajbav9EoMJNeCac1Ax0i
+KHiSvyPtifWu9Mj8IYq6zIVVFoVPc4swDrqxsNkwA8uAXLCIBk/lHOBryIPVmsOd
+4gWhae23ul+HC5gHwlXUfq5Zrljhqpw9D50veSizqdtwmWgvs1crkddXbTwUSvrb
+kZHQoY2PqfJPmF3TNt5RQvwNIaOMospy29niKk/qICaZ1t9KUyMdfNmyVzHGnJPz
+Ae6pdfCsgoymkO1zd4TVaGTRH2tt0ZRXECHPTG/5i8IRJGB4hlTJ4z0QNcVPQGdF
+sI9GuUuRzaIpVbbxf50OG5qWfVRJR2lWwfvIEgmfvKQs9qJBq4X05NeagWoDKhrH
+/90k1S3GI5rw9RyjzD1I4k1li+PjyWs+wZAEn39Hqlxuk+gMWuKCr6Wel/dV3exU
+XlkGJLJo1SUK1Uh2Z6CeSwdSVMf2j21pMbeaw8U9RQund9EOwln8JDKtdQXYW9ba
+SE/hUpvlNHPG/90Tp2JQCkk/MinwV4IGev7mn9piltL8Q7qcU1o9TpAxtdonyaYI
+UYnzpv+g/0fhKnycwRttVukt7Mtgvr0SMCXcImMjdnDpVxbrbEWtLgFsZayg+SzQ
+/03KMOA9AVoo48ZlLa+oERqeedXDBqmKkNJwIsBcYEywHl6NlEHCZk2S/lcr+ra9
+im+l2nua3IvYYIRnWHWoLs0D+Hi/PvQHmj3e2YBeIZMYGPHk8XQ17cofwqU7VDr7
+x6nP22au0LGKTj4+E46r1hEWs9C0X8AMJjfShb+CyN/imo/3a3bJiazE1F5IpKlY
+5UejDh7GCcxnvmjXlY4q+7DeJlz5VSjKjfR5V0b5mkcLEI18c2sBkTVdMVzzBGQO
+kTNSGJSOrF5el9+wlpLY4E8loocJpzH3P3uu+fOwHtNiul5RAlotfJnJd9lYea5k
+W581cgXIWgN6actoiIGZXlHKB5Zsdb3GdmmG0Lb50lsL4GH8MIKDKdumUKSwrT20
+-----END RSA PRIVATE KEY-----
+```
+
+Crap, another encrypted key. But we can see clearly this two files are SSH keys used for connecting as `marla` to the machine using SSH.
+
+Again, JohnTheRipper has a script ready for us: `sshng2john.py`
+
+```
+[firefart@linux run]$ /home/firefart/hacking/JohnTheRipper/run/sshng2john.py /home/firefart/marla.key > /home/firefart/marla
+[firefart@linux run]$ ./john /home/firefart/marla.key
+Using default input encoding: UTF-8
+No password hashes loaded (see FAQ)
+[firefart@linux run]$ ./john /home/firefart/marla
+Using default input encoding: UTF-8
+Loaded 1 password hash (SSH-ng [RSA/DSA/EC/OPENSSH (SSH private keys) 32/64])
+Will run 8 OpenMP threads
+Note: This format may emit false positives, so it will keep trying even after
+finding a possible candidate.
+Press 'q' or Ctrl-C to abort, almost any other key for status
+singer           (/home/firefart/marla.key)
+singer           (/home/firefart/marla.key)
+```
+
+Jeah so the key password is `singer`.
+
+We can now use this password to retreive the next flag:
+```
+root@kali:~# ssh -i marla marla@192.168.56.101
+The authenticity of host '192.168.56.101 (192.168.56.101)' can't be established.
+ECDSA key fingerprint is SHA256:CGwzPRVhg2hHuFrgbZjV6MHx+xXtDLYXCzQJO3PrH4U.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '192.168.56.101' (ECDSA) to the list of known hosts.
+Enter passphrase for key 'marla':
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+well done! your flag is flag{l4y3rs_up0n_l4y3rs}
+Connection to 192.168.56.101 closed.
+```
+
+# marla #2
 
 By looking at the running processes there seems to be an audio stream of a flag streamed by `marla` and a binary only accepting connections from localhost run by `robert`.
 ```
@@ -509,14 +719,13 @@ Now we can also get the `tenbytes` binary and look at it to confirm our script
 
 ![binaryninja](/img/vulnhub_dc416_basement/binaryninja.png)
 
-The last flag missing is the one from the `marla.xip` file which I might add later to this post once I figure it out.
-
 Thanks [@barrebas](https://twitter.com/barrebas) for a lot hours trying to blindly bruteforce the binary :)
 
-The flags so far:
+The flags:
 ```
 flag{j4cks_t0t4L_l4cK_0f_$uRpr1sE}
 flag{bR4in_paRas1te$}
 flag{l3t_Th3_cH1P$_f4LL_wH3Re_tHey_m4y}
 flag{t3N_byt3$_0ugHt_t0_b3_eN0uGh_f0R_4nyb0dY}
+flag{l4y3rs_up0n_l4y3rs}
 ```
