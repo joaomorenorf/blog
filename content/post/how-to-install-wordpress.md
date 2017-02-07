@@ -26,8 +26,8 @@ Now log in via SSH to the machine and execute the following commands:
 
 ```
 sudo su
-apt-get update
-apt-get -qy install apache2 mysql-server php5-mysql php5 libapache2-mod-php5 php5-mcrypt php5-gd unzip
+apt update
+apt -qy install apache2 mariadb-server php5-mysql php5 libapache2-mod-php5 php5-mcrypt php5-gd unzip curl ed
 ```
 Enter your MYSQL root PW during installation when prompted
 
@@ -46,8 +46,8 @@ mv wp-config-sample.php wp-config.php
 # create DB user
 mysql -u root -ppassword -e "CREATE DATABASE wordpress;"
 mysql -u root -ppassword -e "CREATE USER wordpress@localhost;"
-mysql -u root -ppassword -e "SET PASSWORD FOR wordpress@localhost= PASSWORD('wordpress');"
-mysql -u root -ppassword -e "GRANT ALL PRIVILEGES ON wordpress.* TO wordpress@localhost IDENTIFIED BY 'wordpress';"
+mysql -u root -ppassword -e "SET PASSWORD FOR wordpress@localhost=PASSWORD('wordpress');"
+mysql -u root -ppassword -e "GRANT ALL PRIVILEGES ON wordpress.* TO wordpress@localhost;"
 mysql -u root -ppassword -e "FLUSH PRIVILEGES;"
 # configure Wordpress
 sed -i -r "s/define\('DB_NAME', '[^']+'\);/define\('DB_NAME', 'wordpress'\);/g" wp-config.php
