@@ -7,6 +7,8 @@ image = "/img/misc/hacker.jpg"
 +++
 On a recent pentest I got root access to a MySQL database hosting a PHP web application and also an instance of [Piwik](https://piwik.org/). I was able to extract the credentials from the database and crack them really fast because they were only hashed using MD5. It looks like Piwik introduced stronger hashes in Piwik 3 but luckily this target is still running version 2.
 
+**Edit**:  *Piwik now disabled custom plugin uploads by default in 3.0.3 ([Changelog](https://piwik.org/changelog/piwik-3-0-3/)). You have to manually enable it in the config (See [FAQ](https://piwik.org/faq/plugins/faq_21/)) so this removes a lot attack surface from existing installs.*
+
 <!--more-->
 
 So what to do with the passwords? Only changing some Piwik parameters or reading visitor stats is not really exciting so I took a look around in the superuser dashboard and found something interesting: Piwik supports plugins.
