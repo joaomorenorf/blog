@@ -14,8 +14,6 @@ title = "about"
 
 [Github](https://github.com/FireFart)
 
-**XMPP:** firefart [at] firefart [dot] at
-
 [PGP Key](http://pgp.mit.edu/pks/lookup?search=0xDCF54A05D6E62591&op=index)
 
 [Keybase.io](https://keybase.io/firefart)
