@@ -10,6 +10,7 @@ RHme2 (Riscure Hack me 2) was a hardware based CTF challenge started back in 201
 All you need is an Arduino (or Arduino compatible) board with an *atmega328p* chip (Arduino UNO or Arduino Nano). In this post we will solve this challenge by brute forcing it using a second Arduino.
 
 Stuff needed to solve this challenge:
+
 * an Arduino Nano or UNO
 * a second Arduino
 * an oscilloscope
