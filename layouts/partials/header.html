@@ -24,6 +24,9 @@
     {{ if .Params.image }}
     <meta property="og:image" content="{{ .Site.BaseURL }}{{ .Params.image }}" />
     <meta name="twitter:image" content="{{ .Site.BaseURL }}{{ .Params.image }}" />
+    {{ else }}
+    <meta property="og:image" content="https://www.gravatar.com/avatar/530ee2111e51f3d8379b1081d13bf345.png?s=400" />
+    <meta name="twitter:image" content="https://www.gravatar.com/avatar/530ee2111e51f3d8379b1081d13bf345.png?s=400" />
     {{ end }}
     <meta property="og:updated_time" content="{{ .Date }}"/>
     <meta property="article:author" content="https://twitter.com/{{ .Site.Params.twitterName }}"/>
