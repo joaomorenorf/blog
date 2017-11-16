@@ -111,7 +111,7 @@ This file contains cronjobs that should be executed by the user matching the fil
 
 You can also integrate the steps mentioned above inside your main Dockerfile (if it's based on an alpine based image) and change the entrypoint and command to the cron commands if you need access to the main application for the cron jobs.
 
-For example our `docker-compose.yml` file uses the following snippet on the main container to also use it as a cron container (the `user: root` is important as the cron daemon needs to run as root):
+For example our `docker-compose.yml` file uses the following snippet on the main Dockerfile to also use it as a cron container (the `user: root` is important as the cron daemon needs to run as root):
 ```
 entrypoint: ""
 user: root
