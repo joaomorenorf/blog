@@ -10,7 +10,7 @@ Inspired by [Blasty](https://twitter.com/bl4sty) and his [UPC Wifi key generator
 
 <!--more-->
 
-First I tried to identify some debug pins on the board and found multiple possible UART connectors. I connected my [Buspirate](https://www.sparkfun.com/products/9544) to the first UART and got a login shell protected by a password. I tried some default passwords but was not able to get in so I needed to find another way. According to [another blog post](https://www.freeture.ch/?p=766) I found there is also a second UART connector with no password but this one was not working on my device.
+First I tried to identify some debug pins on the board and found multiple possible UART connectors. I connected my [Buspirate](https://www.sparkfun.com/products/9544) to the first UART and got a login shell protected by a password. I tried some default passwords but was not able to get in so I needed to find another way. According to [another blog post](https://freeture.ch/post/2015-03-06-upc-router-evw3226-part3-r00t/) I found there is also a second UART connector with no password but this one was not working on my device.
 
 [![UART](/img/ubee/uart_thumb.png)](/img/ubee/uart.png)
 
