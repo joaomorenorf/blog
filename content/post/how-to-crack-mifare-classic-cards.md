@@ -57,7 +57,7 @@ Here are the basics to set your machine up for getting the access keys.
 The first step is to set up libnfc so the OS can communicate with the NFC reader. You can get the latest libnfc version from [https://github.com/nfc-tools/libnfc/releases](https://github.com/nfc-tools/libnfc/releases). At the time of writing the current version was 1.7.1.
 
 ```
-apt-get install autoconf libtool libusb-dev libpcsclite-dev build-essential
+apt-get install autoconf libtool libusb-dev libpcsclite-dev build-essential libglib2.0-dev
 wget https://github.com/nfc-tools/libnfc/releases/download/libnfc-1.7.1/libnfc-1.7.1.tar.bz2
 tar -jxvf libnfc-1.7.1.tar.bz2
 cd libnfc-1.7.1
